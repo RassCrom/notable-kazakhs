@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="People that contribute towards Kazakh development">
+    <title>Notable Kazakh People</title>
+    <script src="https://unpkg.com/maplibre-gl@^5.5.0/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@^5.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+    <!-- <div class="intro-overlay">
+        <h1 class="intro-title">Kazakhstan</h1>
+        <div class="intro-ornament"><img class="intro-flag" src="./imgs/flag.png" alt=""></div>
+        <h2 class="intro-subtitle">The Hope of the Kazakhs</h2>
+    </div> -->
+
+    <header class="header">
+        <div class="title">Map of Notable Kazakh people</div>
+    </header>
+
+    <main class="main">
+        <div class="person-card">
+
+        </div>
+        <section id="map" class="map-container" aria-label="Interactive map of notable Kazakh people">
+
+        </section>
+
+        <div class="list">
+            <h1 class="list-header">Notable Figures</h1>
+            <div class="list-content"></div>
+            <div class="list-footer"></div>
+        </div>
+    </main>
+
+
+    <script src="./js/main.js"></script>
+    <script src="./data/data.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let map;
+            const mapContainer = document.getElementById('map');
+
+            const loadingEl = document.createElement('div');
+            loadingEl.className = 'map-loading';
+            loadingEl.textContent = 'Map is loading...';
+            mapContainer.appendChild(loadingEl);
+
+            try {
+                map = new maplibregl.Map({
+                    container: 'map',
+                    style: './data/alash-basemap2.json',
+                    center: [67.62, 48.39],
+                    zoom: 4,
+                    minZoom: 2.2,
+                    maxZoom: 22,
+                    hash: true,
+                    renderWorldCopies: false,
+                    compact: false,
+                    maplibreLogo: true
+                });
+
+                map.on('load', () => {
+                    map.addSource('kzPeople', {
+                        type: 'geojson',
+                        data: kzPeople
+                    });
+
+                    map.addLayer({
+                        id: 'kzPeople',
+                        type: 'symbol',
+                        source: 'kzPeople',
+                        layout: {
+                            'text-field': ['get', 'full_name'],
+                            'text-font': ["Roboto Condensed Italic"],
+                            'text-size': ['interpolate', ['linear'], ['zoom'], 4, 10, 12, 16],
+                            'text-offset': [0, 0.5],
+                            'text-anchor': 'top',
+                            'visibility': 'visible'
+                        },
+                        paint: {
+                            'text-color': '#f5e6ca',
+                            'text-halo-color': '#2c2c2c',
+                            'text-halo-width': 1.5,
+                            'text-opacity': 1
+                        }
+                    });
+                });
+                map.on('click', 'kzPeople', (e) => {
+                    const personObj = e.features[0].properties;
+                    showPersonInfo(personObj)
+                    // const coordinates = e.features[0].geometry.coordinates.slice();
+                    // const description = e.features[0].properties.domain;
+                    
+                    // while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    //     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                    // }
+
+                    // new maplibregl.Popup()
+                    //     .setLngLat(coordinates)
+                    //     .setHTML(description)
+                    //     .addTo(map);
+                });
+
+                map.on('mouseenter', 'kzPeople', (e) => {
+                    map.getCanvas().style.cursor = 'pointer';
+                })
+
+                map.on('mouseleave', 'kzPeople', (e) => {
+                    map.getCanvas().style.cursor = 'grab';
+                })
+            } catch (err) {
+                console.error('Error ' + err);
+                showError();
+            } finally {
+                mapContainer.removeChild(loadingEl)
+            }
+
+           
+
+            let kzPeopleFeature = kzPeople.features
+            kzPeopleFeature = [...kzPeopleFeature].sort((a, b) => a.properties.birth_year - b.properties.birth_year)
+            // console.log(kzPeopleFeature)
+
+            const listContent = document.querySelector('.list-content');
+
+            kzPeopleFeature.forEach((feature) => {
+                const personObject = feature.properties;
+                const personCoords = feature.geometry;
+                const itemEl = document.createElement('div');
+                itemEl.className = 'list-item';
+                itemEl.innerHTML = `
+                    <div class='list-left'>
+                        <img class='list-icon' src='./imgs/ink.png' alt='ink pen' />    
+                    </div>
+                    <div class='list-right'>
+                        <h3 class='list-title'>${personObject.full_name}</h3>
+                        <p class='list-year'>${personObject.birth_year} - ${personObject.death_year ? personObject.death_year : 'nowadays'}</p>
+                    </div>
+                `;
+                itemEl.addEventListener('click', () => showPersonInfo(personObject, personCoords));
+                listContent.appendChild(itemEl);
+            })
+
+            function showError() {
+                mapContainer.innerHTML = `
+                    <div class='map-error'>
+                        <p>Sorry, map failed to load. Refresh page again, please.</p>
+                    </div>
+                `;
+            }
+
+            function flyToPerson(location) {
+                map.flyTo({
+                    center: [...location.coordinates],
+                    zoom: 17,
+                    essential: true
+                })
+            }
+
+            function showPersonInfo(person, coords) {
+                const personCard = document.querySelector('.person-card');
+                personCard.innerHTML = `
+                    <div class="person-close"></div>
+                    <div class="person-header">
+                        <img class="person-image" src="${person.portrait_url}" alt="">
+                        <div class="person-overlay">
+                            <h1 class="person-name">${person.full_name}</h1>
+                            <h2 class="person-name__native">${person.native_name}</h2>
+                            <p class="person-years">${person.birth_year} — ${person.death_year}</p>
+                        </div>
+                    </div>
+
+                    <div class="person-content">
+                        <div class="person-profession">${person.profession}</div>
+                        <div class="person-description">${person.bio}</div>
+                        <div class="person-keywords">
+                            <p class="keyword">poet</p>
+                            <p class="keyword">Kazakh literature</p>
+                            <p class="keyword">philosophy</p>
+                        </div>
+                    </div>
+
+                    <div class="person-footer">
+                        <a class="person-wiki" href="${person.wiki_url}">
+                            Learn More
+                        </a>
+                        <button class='person-zoom'>Zoom to person</button>
+                    </div>
+                `;
+                personCard.classList.add('visible');
+
+                const personClose = document.querySelector('.person-close');
+                personClose.addEventListener('click', () => {
+                    personCard.classList.remove('visible')
+                })
+                
+                const personZoom = document.querySelector('.person-zoom');
+                personZoom.addEventListener('click', () => {
+                    console.log(map)
+                    flyToPerson(coords)
+                })
+
+            }
+        });
+
+    </script>
+</body>
+</html>

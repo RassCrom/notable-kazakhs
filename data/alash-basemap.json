@@ -1,0 +1,224 @@
+{
+  "version": 8,
+  "name": "OSM Liberty",
+  "metadata": {
+    "maputnik:license": "https://github.com/maputnik/osm-liberty/blob/gh-pages/LICENSE.md",
+    "maputnik:renderer": "mbgljs",
+    "openmaptiles:version": "3.x"
+  },
+  "sources": {
+    "openmaptiles": {
+      "type": "vector",
+      "url": "https://api.maptiler.com/tiles/v3-openmaptiles/tiles.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL"
+    }
+  },
+  "sprite": "https://maputnik.github.io/osm-liberty/sprites/osm-liberty",
+  "glyphs": "https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "bg",
+      "type": "background",
+      "paint": {"background-color": ["literal", "#f4ecd8"]}
+    },
+    {
+      "id": "lc-parks",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "landcover",
+      "filter": ["all", ["==", "subclass", "park"]],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "#bfc4a5", "fill-opacity": 0.6}
+    },
+    {
+      "id": "water",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(199, 212, 216, 1)", "fill-opacity": 0.4}
+    },
+    {
+      "id": "waterway",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "waterway",
+      "minzoom": 0,
+      "maxzoom": 24,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(154, 169, 175, 1)",
+        "line-width": 1,
+        "line-blur": 0,
+        "line-dasharray": [3, 1]
+      }
+    },
+    {
+      "id": "building-3d",
+      "type": "fill-extrusion",
+      "source": "openmaptiles",
+      "source-layer": "building",
+      "minzoom": 14.5,
+      "paint": {
+        "fill-extrusion-color": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          14,
+          "hsl(36, 10%, 80%)",
+          18,
+          "hsl(36, 15%, 70%)"
+        ],
+        "fill-extrusion-height": {
+          "property": "render_height",
+          "type": "identity"
+        },
+        "fill-extrusion-base": {
+          "property": "render_min_height",
+          "type": "identity"
+        },
+        "fill-extrusion-opacity": 0.75
+      }
+    },
+    {
+      "id": "building",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "building",
+      "minzoom": 2,
+      "maxzoom": 23,
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(139, 125, 107, 1)", "fill-opacity": 0.5}
+    },
+    {
+      "id": "borders-country",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "boundary",
+      "filter": ["all", ["==", "admin_level", 2], ["==", "disputed", 0]],
+      "layout": {"visibility": "visible"},
+      "paint": {
+        "line-color": "rgba(51, 51, 51, 1)",
+        "line-opacity": 0.6,
+        "line-dasharray": [6, 2],
+        "line-width": 1.5,
+        "line-blur": 0.2
+      }
+    },
+    {
+      "id": "mp",
+      "type": "circle",
+      "source": "openmaptiles",
+      "source-layer": "mountain_peak",
+      "paint": {
+        "circle-radius": 3,
+        "circle-color": "rgba(68, 68, 68, 1)",
+        "circle-opacity": 0.7,
+        "circle-stroke-width": 1,
+        "circle-blur": 0.5,
+        "circle-stroke-color": "rgba(34, 2, 2, 1)"
+      }
+    },
+    {
+      "id": "streets",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 14,
+      "maxzoom": 24,
+      "filter": [
+        "any",
+        [
+          "match",
+          ["get", "class"],
+          ["residential", "path", "track", "footway"],
+          true,
+          false
+        ]
+      ],
+      "paint": {
+        "line-color": "#7a7a7a",
+        "line-width": 0.5,
+        "line-opacity": 0.5,
+        "line-blur": 0,
+        "line-dasharray": [6, 7]
+      }
+    },
+    {
+      "id": "secondary",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 7,
+      "filter": [
+        "any",
+        [
+          "match",
+          ["get", "class"],
+          ["secondary", "tertiary", "trunk"],
+          true,
+          false
+        ]
+      ],
+      "paint": {
+        "line-color": "rgba(90, 90, 90, 1)",
+        "line-width": 1,
+        "line-opacity": 0.5,
+        "line-blur": 0.2
+      }
+    },
+    {
+      "id": "main",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 4,
+      "filter": [
+        "any",
+        ["match", ["get", "class"], ["primary", "motorway"], true, false]
+      ],
+      "paint": {
+        "line-color": "#3a3a3a",
+        "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1, 14, 2],
+        "line-opacity": 0.2,
+        "line-blur": 0.2
+      }
+    },
+    {
+      "id": "poi_z14",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "poi",
+      "minzoom": 14,
+      "filter": [
+        "all",
+        ["in", "class", "museum", "castle", "monument", "gallery"]
+      ],
+      "layout": {
+        "icon-image": [
+          "match",
+          ["get", "subclass"],
+          ["florist", "furniture", "soccer", "tennis"],
+          ["get", "subclass"],
+          ["get", "class"]
+        ],
+        "text-anchor": "top",
+        "text-field": "{name}",
+        "text-font": ["Roboto Condensed Italic"],
+        "text-max-width": 9,
+        "text-offset": [0, 0.6],
+        "text-size": 12
+      },
+      "paint": {
+        "text-color": "#666",
+        "text-halo-blur": 0.5,
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1
+      }
+    }
+  ],
+  "id": "osm-liberty"
+}

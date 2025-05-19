@@ -1,0 +1,215 @@
+.person-card {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    width: 360px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transform: translateY(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 100;
+}
+
+.person-card.visible {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.person-header {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+
+    /* background-image: url('https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTRZVWNUnK6kzzzFLRlKzm5_e6EQMFbw9W0xjioQ0X8ifYVW90F4W0TodkxY_2uiMRIKeEfX6wMec9Sc_XclkDroQ');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover; */
+}
+
+.person-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.person-card:hover .person-image {
+    transform: scale(1.05);
+}
+
+.person-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2.5rem 1.5rem 1rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8) 50%);
+}
+
+.person-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.person-name__native {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.person-years {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.person-content {
+    padding: 1.5rem;
+}
+
+.person-profession {
+    margin-bottom: 1rem;
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background: linear-gradient(90deg, rgba(0, 160, 227, 0.15), rgba(255, 198, 39, 0.15));
+    border-radius: 50px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.person-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+
+    max-height: 220px;
+    overflow-y: scroll;
+}
+
+.person-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem 1.5rem;
+}
+
+.person-keywords {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.keyword {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.person-wiki {
+    display: inline-block;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(90deg, var(--kazakh-blue), var(--kazakh-gold));
+    border-radius: 50px;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.person-wiki:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 160, 227, 0.3);
+}
+
+.person-zoom {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.person-zoom:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15);
+}
+
+.person-zoom:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+.person-zoom::before {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='M21 21l-4.35-4.35'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    vertical-align: middle;
+    opacity: 0.8;
+}
+
+.person-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 28px;
+    height: 28px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.person-close:hover {
+    background: rgba(255, 51, 0, 0.7);
+    transform: rotate(90deg);
+}
+
+.person-close::before,
+.person-close::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 2px;
+    background: white;
+}
+
+.person-close::before {
+    transform: rotate(45deg);
+}
+
+.person-close::after {
+    transform: rotate(-45deg);
+}
