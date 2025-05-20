@@ -13,7 +13,7 @@
     transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    z-index: 100;
+    z-index: 120;
 }
 
 .person-card.visible {
@@ -176,10 +176,17 @@
     opacity: 0.8;
 }
 
-.person-close {
+.person-tabs {
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+}
+
+.person-close {
     width: 28px;
     height: 28px;
     background: rgba(0, 0, 0, 0.5);
@@ -212,4 +219,21 @@
 
 .person-close::after {
     transform: rotate(-45deg);
+}
+
+@media screen and (max-width: 760px) {
+    .person-card {
+        width: 100vw;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        max-height: 100%;
+    }
+
+    .person-description {
+        max-height: 100%;
+    }
 }

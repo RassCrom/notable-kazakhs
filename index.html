@@ -29,9 +29,9 @@
         </section>
 
         <div class="list">
-            <h1 class="list-header">Notable Figures</h1>
+            <h1 class="list-header">Notable Figures <div id="list-minimize" class="list-minimize"></div></h1>
             <div class="list-content"></div>
-            <div class="list-footer"></div>
+            <!-- <div class="list-footer"></div> -->
         </div>
     </main>
 
@@ -125,6 +125,12 @@
             // console.log(kzPeopleFeature)
 
             const listContent = document.querySelector('.list-content');
+            const listMinimize = document.getElementById('list-minimize');
+
+            listMinimize.addEventListener('click', () => {
+                const isHidden = getComputedStyle(listContent).display === 'none';
+                listContent.style.display = isHidden ? 'flex' : 'none';
+            });
 
             kzPeopleFeature.forEach((feature) => {
                 const personObject = feature.properties;
@@ -141,6 +147,7 @@
                     </div>
                 `;
                 itemEl.addEventListener('click', () => showPersonInfo(personObject, personCoords));
+
                 listContent.appendChild(itemEl);
             })
 
@@ -161,9 +168,17 @@
             }
 
             function showPersonInfo(person, coords) {
+                const mobileWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+                if (mobileWidth < 768) {
+                    listContent.style.display = 'none';
+                }
+
                 const personCard = document.querySelector('.person-card');
                 personCard.innerHTML = `
-                    <div class="person-close"></div>
+                    <div class='person-tabs'>
+                        <div class="person-close"></div>
+                        <div id='person-minimize' class="list-minimize"></div>    
+                    </div>
                     <div class="person-header">
                         <img class="person-image" src="${person.portrait_url}" alt="">
                         <div class="person-overlay">
@@ -191,6 +206,16 @@
                     </div>
                 `;
                 personCard.classList.add('visible');
+                
+                const personMinimize = document.getElementById('person-minimize');
+                const personContent = document.querySelector('.person-content');
+                const personFooter = document.querySelector('.person-footer');
+
+                personMinimize.addEventListener('click', () => {
+                    const isHiddenPerson = getComputedStyle(personContent).display === 'none';
+                    personContent.style.display = isHiddenPerson ? 'block' : 'none'
+                    personFooter.style.display = isHiddenPerson ? 'block' : 'none'
+                })
 
                 const personClose = document.querySelector('.person-close');
                 personClose.addEventListener('click', () => {
@@ -199,8 +224,10 @@
                 
                 const personZoom = document.querySelector('.person-zoom');
                 personZoom.addEventListener('click', () => {
-                    console.log(map)
+                    // console.log(map)
                     flyToPerson(coords)
+                    personContent.style.display = 'none'
+                    personFooter.style.display = 'none'
                 })
 
             }
