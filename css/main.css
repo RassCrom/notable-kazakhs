@@ -63,9 +63,9 @@ body {
     margin: 60px auto 0;
 }
 
-@supports (-webkit-touch-callout: none) {
+/* @supports (-webkit-touch-callout: none) {
     .main {
         height: -webkit-fill-available;
     }
-}
+} */
 
